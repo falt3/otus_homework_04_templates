@@ -8,8 +8,7 @@
 template <typename T,
     typename Fake = typename std::enable_if<
         // std::is_same<typename std::remove_reference<T>::type, std::string>::value, 
-        std::is_same<T, std::string>::value, 
-        void>::type>
+        std::is_same<T, std::string>::value, void>::type>
 auto impl(T t, int) {
     std::cout << t << std::endl;
 }
@@ -30,10 +29,9 @@ auto impl(T t, long) -> decltype(t.clear()) {
 template <typename T, typename T2=void,
     typename Fake = typename std::enable_if<
         // std::is_integral<typename std::remove_reference<T>::type>::value, 
-        std::is_integral<T>::value, 
-        void>::type>
+        std::is_integral<T>::value, void>::type>
 auto impl(T t, int) {
-    uint8_t*    p = (uint8_t *)&t;
+    uint8_t* p = reinterpret_cast<uint8_t *>(&t);    
     for (int i = sizeof(T) - 1; i >= 0 ; --i) {
         std::cout << (int)p[i];
         if (i > 0)  std::cout << ".";
@@ -44,7 +42,7 @@ auto impl(T t, int) {
 
 template <typename T>
 auto print_ip(T t) {
-    impl(t, 20);
+    impl(t, (int)20);
 }
 
 
